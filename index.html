@@ -1,0 +1,27 @@
+<html>
+
+<body>
+<form>
+<textarea name="console" style="width: 100%;height: 150px;"></textarea>
+<input name="command" type="text" style="width: 100%;" autofocus />
+<input type="submit" style="display: none;" />
+</form>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io.connect('http://localhost'),
+	form = document.forms[0];
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    socket.emit('command', {name:form.command.value});
+    form.console.value += form.command.value + '\n';
+    form.command.value = '';
+    form.console.scrollTop = form.console.scrollHeight;
+  });
+
+  socket.on('answer', function (data) {
+    form.console.value += data.message + '\n';
+  });
+</script>
+</body>
+</html>
